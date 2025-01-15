@@ -1,0 +1,41 @@
+{
+  "name": "webpage",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "install-basic-components": "npm install ../../basic-components/sb-labs-basic-components-0.1.0.tgz",
+    "install-web3-data": "npm install ../../web3-data/sb-labs-web3-data-1.0.0.tgz",
+    "install-contract-factory-v2": "npm install ../../contract-factory-v2/sb-labs-contract-factory-v2-1.0.0.tgz",
+    "install-web3-engine": "npm install ../../web3-engine/sb-labs-web3-engine-1.0.0.tgz",
+    "install-all": "npm run install-basic-components && npm run install-web3-data && npm run install-contract-factory-v2 && npm run install-web3-engine"
+  },
+  "dependencies": {
+    "@sb-labs/basic-components": "file:../../basic-components/sb-labs-basic-components-0.1.0.tgz",
+    "@sb-labs/contract-factory-v2": "file:../../contract-factory-v2/sb-labs-contract-factory-v2-1.0.0.tgz",
+    "@sb-labs/web3-data": "file:../../web3-data/sb-labs-web3-data-1.0.0.tgz",
+    "@sb-labs/web3-engine": "file:../../web3-engine/sb-labs-web3-engine-1.0.0.tgz",
+    "crypto-js": "^4.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "vite-plugin-wasm": "^3.4.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^6.0.5"
+  }
+}

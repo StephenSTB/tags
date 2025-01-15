@@ -1,0 +1,25 @@
+#wallet{
+    border: solid 1px black;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+/* Desktop */
+@media screen and (min-width: 900px) {
+    #wallet{
+        height: 800px;
+        width: 600px;
+    }
+	
+}
+/*Mobile*/
+@media screen and (max-width: 900px) 
+{
+	#wallet{
+        height: 800px;
+        width: 350px;
+    }
+}

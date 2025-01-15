@@ -1,0 +1,44 @@
+#account{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/*Account*/
+#account-header, #account-send{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#display-account{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#display-account-copy{
+    margin-left: 10px;
+    width: 30px;
+}
+/*Send */
+
+#account-ether-input, #account-send-button{
+    margin-top: 10px;
+}
+
+/*network*/
+
+#display-network{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
