@@ -62,7 +62,7 @@ const main = async () =>{
 
     account = wallet[0].address as string;
 
-    await deployTags();
+    //await deployTags();
     /*
     TagRequested.on("data", (event: any) =>{
         console.log(event.returnValues)
@@ -70,7 +70,7 @@ const main = async () =>{
 
     await requestTag();
 
-    await getRequestedTags();
+    //await getRequestedTags();
     
     process.exit(0)
 }
@@ -79,11 +79,26 @@ const deployTags = async () =>{
     console.log(yellow(), "Deploying Tags...")
     const tagsDeployed = await engine.deploy(network, "Tags", [], {from: account})
     
-    console.log(tagsDeployed)
+    console.log(tagsDeployed.deployed.options.address)
 
-    console.log(tagsDeployed.deployed.events)
+    //console.log(tagsDeployed.deployed.events)
     //TagRequested = tagsDeployed.deployed.events.TagRequested();
     
+}
+
+async function streamToBlob(stream: fs.ReadStream): Promise<Blob> {
+    const pt = new PassThrough();
+    const chunks: Buffer[] = [];
+  
+    stream.pipe(pt);
+  
+    for await (const chunk of pt) {
+      chunks.push(chunk);
+    }
+  
+    const uint8ArrayChunks = chunks.map((chunk) => new Uint8Array(chunk));
+    const buffer = Buffer.concat(uint8ArrayChunks);
+    return new Blob([buffer]);
 }
 
 const requestTag = async () =>{
@@ -96,22 +111,6 @@ const requestTag = async () =>{
     console.log(tagRequested)
 
     const formdata = new FormData();
-
-    
-    async function streamToBlob(stream: fs.ReadStream): Promise<Blob> {
-        const pt = new PassThrough();
-        const chunks: Buffer[] = [];
-      
-        stream.pipe(pt);
-      
-        for await (const chunk of pt) {
-          chunks.push(chunk);
-        }
-      
-        const uint8ArrayChunks = chunks.map((chunk) => new Uint8Array(chunk));
-        const buffer = Buffer.concat(uint8ArrayChunks);
-        return new Blob([buffer]);
-    }
 
     const readStream = fs.createReadStream('./tag/bafkreie6z5t57xg2htwfdgjhvv6wyaqemfqjggsoswzpsimi5c6ibjtg24.png');
     const blob = await streamToBlob(readStream);

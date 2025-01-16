@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button, Input } from "@sb-labs/basic-components/dist";
 
@@ -15,7 +15,7 @@ import * as CryptoJS from 'crypto-js';
 import "./Display.css";
 
 interface DisplayProps{
-    engine: any;
+    engine: Web3Engine | undefined;
     network: string;
     setComp: any;
     setEngineProps: any;
@@ -33,6 +33,16 @@ export const Display = (props: DisplayProps) => {
 
     const [error, setError] = useState<string>("")
 
+    useEffect(() =>{
+        if(props.engine === undefined){
+            console.log("No Engine")
+            setState("Connect")
+            return;
+        }
+        setState("Account")
+        setEngine(props.engine)
+        setNetwork(props.network)
+    },[])
 
     /*Display */
     const connectWallet = async () =>{

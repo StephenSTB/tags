@@ -16,7 +16,7 @@
     align-items: center;
 }
 
-#topbar-name-button, #topbar-message-button{
+#topbar-name-button, #topbar-message-button, #topbar-tag-button, #topbar-wallet-button{
     height: 30px;
     display: flex;
     flex-direction: row;

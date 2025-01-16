@@ -5,6 +5,7 @@ import { Create } from "./components/create/Create"
 import "./Wallet.css"
 import { Display } from "./components/display/Display"
 import { Import } from "./components/import/Import"
+import { Tag } from "./components/tag/Tag"
 
 interface WalletProps{
     network: string,
@@ -46,12 +47,13 @@ export const Wallet = (props: WalletProps) =>{
     return(
         <>
             <div id="wallet">
-                <Topbar />
+                <Topbar engine={engine} setComp={setComp}/>
                 {state == "Create" &&
                     <Create mobile={mobile} setComp={setComp}/>
                 }
                 {state == "Display" &&  <Display mobile={mobile} engine={engine} network={network} setComp={setComp} setEngineProps={setEngineProps}/>}
                 {state == "Import" &&  <Import mobile={mobile} setComp={setComp} />}
+                {state == "Tag" &&  <Tag mobile={mobile} engine={engine as any} network={network} setComp={setComp} />}
             </div>
         </>
     )

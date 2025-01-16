@@ -5,6 +5,77 @@ import multer from "multer";
 import { rateLimit } from "express-rate-limit"
 import { fileTypeFromBuffer } from 'file-type';
 
+import { providers } from "@sb-labs/web3-data/networks/Providers.js"
+
+import {Providers} from "@sb-labs/web3-data/networks/Providers.js"
+
+import {deployed} from "@sb-labs/web3-data/networks/DeployedContracts.js"
+
+import { Web3Engine } from "@sb-labs/web3-engine/Web3Engine.js";
+
+import { EngineArgs } from "@sb-labs/web3-engine/Web3Engine.js";
+
+import { contractFactoryV2 } from "@sb-labs/contract-factory-v2/ContractFactoryV2.js"
+
+import { green, yellow, red, gray } from "@sb-labs/web3-data/functions/ConsoleColors.js";
+
+import fs from "fs"
+
+import * as raw from "multiformats/codecs/raw"
+import { sha256 } from 'multiformats/hashes/sha2';
+import * as Block from 'multiformats/block';
+import { CID } from "multiformats";
+import { createHelia } from "helia";
+import { FsBlockstore }  from "blockstore-fs"
+import e from "express";
+
+let blockstore = new FsBlockstore("./tags/helia")
+
+let helia = await createHelia({blockstore});
+
+let engine : Web3Engine;
+
+let wallet: any
+
+let mnemonic : string;
+
+let account: string;
+
+const network: string = "Ganache"
+
+try{
+  mnemonic = (fs.readFileSync("../secret/.secret-mn-ganache")).toString()
+}catch{
+  mnemonic = (fs.readFileSync("../../secret/.secret-mn-ganache")).toString()
+}
+
+let prvdrs = {} as Providers;
+
+prvdrs[network] = providers[network]
+
+const engineArgs = 
+{
+    browser: false,
+    mnemonic, 
+    defaultAccount: 0,
+    networks: [network], 
+    defaultNetwork: network, 
+    providers: prvdrs, 
+    deployed, 
+    contractFactory: contractFactoryV2, 
+    contractFactoryVersion: 2
+} as EngineArgs
+
+engine = await Web3Engine.initialize(engineArgs);
+
+wallet = engine.defaultInstance?.wallet;
+
+account = wallet[0].address as string;
+
+console.log("Tags Address: ", engine.defaultInstance?.contracts["Tags"].options.address)
+
+console.log()
+
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 40, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
@@ -50,7 +121,59 @@ app.post("/upload", upload.single('file'), async (req, res) =>{
         return
     }
 
+    try{
+        const tagjson = JSON.parse(req.body.data)
+        console.log(tagjson)
+        const tagreq = await engine.sendTransaction(network, {from: account}, "Tags", "TagsRequested", [tagjson.address, tagjson.tag], true)
+        console.log(tagreq)
+        // test content vs file
+        const file = new Uint8Array(req.file?.buffer as Buffer)
+        //console.log("File", file)
+        const block = await Block.encode({value: file, codec: raw, hasher: sha256})
+        console.log(block.cid.toString())
+
+        if(block.cid.toString() != tagreq.transaction.content){
+            res.send("Invalid Content cid")
+            return;
+        }
+        
+
+        // get tags contract value
+        let balance = await engine.web3Instances[network].web3.eth.getBalance(engine.defaultInstance?.contracts["Tags"].options.address)
+
+        //console.log("Contract balance: ", engine.utils.fromWei(balance, "ether"))
+
+        if(balance < engine.utils.toWei("0.001", "ether")){
+            res.send("Insufficient Funds")
+            return;
+        }
+
+        await engine.sendTransaction(network, {from: account}, "Tags", "getValue", [])
+
+        // add tag to tags contract
+
+        console.log()
+
+        await engine.sendTransaction(network, {from: account}, "Tags", "addTag", [tagjson.tag, [tagreq.transaction.content, tagreq.transaction.tager, tagreq.transaction.blockNumber]]);
+
+        // get the added tag
+
+        const tag = await engine.sendTransaction(network, {from: account}, "Tags", "TagsMap", [tagjson.tag], true)
+
+        console.log(tag)
+
+        // Add block to blockstore
+        await helia.blockstore.put(block.cid, block.bytes)
+
+        await helia.pins.add(block.cid)
+
+        fs.writeFileSync(`./tags/${block.cid.toString()}.png`, block.bytes)
+        
+    }catch(e){
+        console.log(e)
+    }
+
     res.send("Uploaded")
 })
 
-app.listen(3001, () =>{console.log("listening on port 3000")})
+app.listen(3001, () =>{console.log("listening on port 3001")})

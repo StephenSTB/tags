@@ -4,19 +4,29 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "install-web3-data": "npm install ../../web3-data/sb-labs-web3-data-1.0.0.tgz",
+    "install-contract-factory-v2": "npm install ../../contract-factory-v2/sb-labs-contract-factory-v2-1.0.0.tgz",
+    "install-web3-engine": "npm install ../../web3-engine/sb-labs-web3-engine-1.0.0.tgz",
+    "install-all": "npm run install-web3-data && npm run install-contract-factory-v2 && npm run install-web3-engine",
     "server": "nodemon --exec ts-node --esm --files server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sb-labs/contract-factory-v2": "file:../../contract-factory-v2/sb-labs-contract-factory-v2-1.0.0.tgz",
+    "@sb-labs/web3-data": "file:../../web3-data/sb-labs-web3-data-1.0.0.tgz",
+    "@sb-labs/web3-engine": "file:../../web3-engine/sb-labs-web3-engine-1.0.0.tgz",
     "@types/multer": "^1.4.12",
+    "blockstore-fs": "^2.0.2",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
+    "helia": "^5.2.0",
     "mime-types": "^2.1.35",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "multiformats": "^13.3.1"
   },
   "type": "module",
   "devDependencies": {
