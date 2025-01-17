@@ -27,7 +27,10 @@ import * as Block from 'multiformats/block';
 import { CID } from "multiformats";
 import { createHelia } from "helia";
 import { FsBlockstore }  from "blockstore-fs"
-import e from "express";
+
+import { URL } from "url"
+
+const __dirname = new URL('.', import.meta.url).pathname;
 
 let blockstore = new FsBlockstore("./tags/helia")
 
@@ -174,6 +177,24 @@ app.post("/upload", upload.single('file'), async (req, res) =>{
     }
 
     res.send("Uploaded")
+})
+
+app.get("/tags/:tag", async (req, res) =>{
+
+    const tag = req.params.tag
+
+    console.log(console.log(req.params))
+
+    const t = await engine.sendTransaction(network, {from: account}, "Tags", "TagsMap", [tag], true)
+
+    if(t.transaction.blockNumber == "0"){
+        res.send("Tag doesn't exist")
+        return;
+    }
+
+    res.sendFile(`./tags/${t.transaction.content}.png`, { root: __dirname });
+
+    //res.send(t.transaction)
 })
 
 app.listen(3001, () =>{console.log("listening on port 3001")})

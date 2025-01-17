@@ -68,7 +68,9 @@ const main = async () =>{
         console.log(event.returnValues)
     })*/
 
-    await requestTag();
+    //await requestTag();
+
+    await getRequestedTags()
 
     //await getRequestedTags();
     
@@ -127,10 +129,15 @@ const requestTag = async () =>{
 }
 
 const getRequestedTags = async () =>{
-    console.log(yellow(), "Getting Requested Tags...")
-    const requestedTags = await engine.sendTransaction(network, {from: account },  "Tags", "TagsRequested", [account, "stb"], true)
-    
-    console.log(requestedTags)
+    console.log(yellow(), "Getting Requested Tag...")
+    //const requestedTags = await engine.sendTransaction(network, {from: account },  "Tags", "TagsMap", ["stb"], true)
+
+    //console.log(requestedTags)
+
+    const resp = await axios.get(`http://localhost:3001/tags/stb`)
+
+      console.log(resp.data)
+      
 }
 
 main()

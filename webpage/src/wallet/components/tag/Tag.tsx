@@ -36,6 +36,9 @@ export const Tag = (props: TagProps) => {
     const [searchCid, setSearchCid] = useState<string>("")
     const [searchError, setSearchError] = useState<string>("")
 
+    //tag
+    const [tagImage, setTagImage] = useState<any>(user)
+
     useEffect(() =>{
         if(props.engine === undefined){
             console.log("No Engine")
@@ -146,6 +149,14 @@ export const Tag = (props: TagProps) => {
             return;
         }
 
+        const resp = await axios.get("http://localhost:3001/tags/" + e.target.value, {responseType: "blob"})
+
+        if(resp.data !== "Tag doesn't exist"){
+            const blob = resp.data;
+            const blobUrl = URL.createObjectURL(blob);
+            setTagImage(blobUrl)
+        }
+
         setSearchCid(t.transaction.content)
 
         setSearchError("")
@@ -170,7 +181,8 @@ export const Tag = (props: TagProps) => {
             <Input size="small" placeholder="tag..." onChange={searchTag}/>
             <br />
             <div> <img src={"https://ipfs.io/ipfs/" + searchCid} id="tag-image"/></div>
-            <div> <a href={"https://ipfs.io/ipfs/" + searchCid} id="tag-image">{searchCid}</a></div>
+            <div> <a href={"https://ipfs.io/ipfs/" + searchCid} >{searchCid}</a></div>
+            <div> <img src={tagImage} id="tag-image"/></div>
             {searchError}
         </div>
         
