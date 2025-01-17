@@ -25,16 +25,16 @@ import * as raw from "multiformats/codecs/raw"
 import { sha256 } from 'multiformats/hashes/sha2';
 import * as Block from 'multiformats/block';
 import { CID } from "multiformats";
-import { createHelia } from "helia";
-import { FsBlockstore }  from "blockstore-fs"
+//import { createHelia } from "helia";
+//import { FsBlockstore }  from "blockstore-fs"
 
 import { URL } from "url"
 
 const __dirname = new URL('.', import.meta.url).pathname;
 
-let blockstore = new FsBlockstore("./tags/helia")
+//let blockstore = new FsBlockstore("./tags/helia")
 
-let helia = await createHelia({blockstore});
+//let helia = await createHelia({blockstore});
 
 let engine : Web3Engine;
 
@@ -166,9 +166,9 @@ app.post("/upload", upload.single('file'), async (req, res) =>{
         console.log(tag)
 
         // Add block to blockstore
-        await helia.blockstore.put(block.cid, block.bytes)
+        //await helia.blockstore.put(block.cid, block.bytes)
 
-        await helia.pins.add(block.cid)
+        //await helia.pins.add(block.cid)
 
         fs.writeFileSync(`./tags/${block.cid.toString()}.png`, block.bytes)
         
