@@ -15,7 +15,7 @@
     "install-web3-engine": "npm install ../../web3-engine/sb-labs-web3-engine-1.0.0.tgz",
     "install-all": "npm run install-web3-data && npm run install-contract-factory-v2 && npm run install-web3-engine",
     "server": "nodemon --exec ts-node --esm --files server.ts",
-    "build": "pkg server.mjs --esm -t node18-linux-x64  --public -o server"
+    "build": "pkg server.js --esm -t node18-linux-x64  --public -o server"
   },
   "keywords": [],
   "author": "",

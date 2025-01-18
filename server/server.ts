@@ -17,9 +17,9 @@ import { EngineArgs } from "@sb-labs/web3-engine/Web3Engine.js";
 
 import { contractFactoryV2 } from "@sb-labs/contract-factory-v2/ContractFactoryV2.js"
 
-import { green, yellow, red, gray } from "@sb-labs/web3-data/functions/ConsoleColors.js";
+//import { green, yellow, red, gray } from "@sb-labs/web3-data/functions/ConsoleColors.js";
 
-import fs from "fs"
+import fs from "node:fs"
 
 import * as raw from "multiformats/codecs/raw"
 import { sha256 } from 'multiformats/hashes/sha2';
@@ -28,7 +28,7 @@ import { CID } from "multiformats";
 //import { createHelia } from "helia";
 //import { FsBlockstore }  from "blockstore-fs"
 
-import { URL } from "url"
+import * as url  from "node:url"
 
 const __dirname = new URL('.', import.meta.url).pathname;
 
@@ -44,7 +44,7 @@ let mnemonic : string;
 
 let account: string;
 
-const network: string = "Ganache"
+const network: string = "Sepolia"
 
 try{
   mnemonic = (fs.readFileSync("../secret/.secret-mn-ganache")).toString()

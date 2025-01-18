@@ -29,7 +29,7 @@ let account: string;
 
 let TagRequested: any;
 
-const network: string = "Ganache"
+const network: string = "Sepolia"
 
 try{
     mnemonic = (fs.readFileSync("../secret/.secret-mn-ganache")).toString()
@@ -62,7 +62,7 @@ const main = async () =>{
 
     account = wallet[0].address as string;
 
-    //await deployTags();
+    await deployTags();
     /*
     TagRequested.on("data", (event: any) =>{
         console.log(event.returnValues)
@@ -70,7 +70,7 @@ const main = async () =>{
 
     //await requestTag();
 
-    await getRequestedTags()
+    //await getRequestedTags()
 
     //await getRequestedTags();
     
