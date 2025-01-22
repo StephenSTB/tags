@@ -9,7 +9,7 @@
 }
 
 #center{
-    width: 300px;
+
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -25,4 +25,6 @@
     background: none;
     border: none;
     font-size: large;
+    outline: none;
+    box-shadow: none;
 }

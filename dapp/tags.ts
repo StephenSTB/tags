@@ -16,8 +16,13 @@ import fs from "fs"
 
 import axios from "axios";
 
+
+
 import { PassThrough } from 'stream';
 import { Buffer } from 'buffer';
+
+
+
 
 let engine : Web3Engine;
 
@@ -29,7 +34,7 @@ let account: string;
 
 let TagRequested: any;
 
-const network: string = "Sepolia"
+const network: string = "Ganache"
 
 try{
     mnemonic = (fs.readFileSync("../secret/.secret-mn-ganache")).toString()
@@ -62,7 +67,7 @@ const main = async () =>{
 
     account = wallet[0].address as string;
 
-    await deployTags();
+    //await deployTags(); 
     /*
     TagRequested.on("data", (event: any) =>{
         console.log(event.returnValues)
@@ -70,7 +75,7 @@ const main = async () =>{
 
     //await requestTag();
 
-    //await getRequestedTags()
+    await getRequestedTags()
 
     //await getRequestedTags();
     
@@ -108,16 +113,16 @@ const requestTag = async () =>{
 
     console.log(engine.utils.toWei("0.001", "ether"))
     
-    const tagRequested = await engine.sendTransaction(network, {from: account, value: engine.utils.toWei("0.001", "ether")}, "Tags", "requestTag", ["stb", "bafkreie6z5t57xg2htwfdgjhvv6wyaqemfqjggsoswzpsimi5c6ibjtg24"])
+    const tagRequested = await engine.sendTransaction(network, {from: account, value: engine.utils.toWei("0.001", "ether")}, "Tags", "requestTag", ["stb", "bafkreieoxgfvzgamiaa6y6itexozarqzdrd4yospuyywvvjnrhqc26hmgu"])
     
     console.log(tagRequested)
 
     const formdata = new FormData();
 
-    const readStream = fs.createReadStream('./tag/bafkreie6z5t57xg2htwfdgjhvv6wyaqemfqjggsoswzpsimi5c6ibjtg24.png');
+    const readStream = fs.createReadStream('./tag/bafkreieoxgfvzgamiaa6y6itexozarqzdrd4yospuyywvvjnrhqc26hmgu.mp3'); //todo get raw
     const blob = await streamToBlob(readStream);
     
-    formdata.append('file', blob, "bafkreie6z5t57xg2htwfdgjhvv6wyaqemfqjggsoswzpsimi5c6ibjtg24.png")
+    formdata.append('file', blob, "bafkreieoxgfvzgamiaa6y6itexozarqzdrd4yospuyywvvjnrhqc26hmgu.mp3")
     formdata.append('data', JSON.stringify({address: account, tag: "stb"}))
 
     const res = await axios.post("http://localhost:3001/upload/", formdata, {
@@ -136,7 +141,7 @@ const getRequestedTags = async () =>{
 
     const resp = await axios.get(`http://localhost:3001/tags/stb`)
 
-      console.log(resp.data)
+    console.log(resp.data)
       
 }
 

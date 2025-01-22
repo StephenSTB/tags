@@ -25,16 +25,36 @@ import * as raw from "multiformats/codecs/raw"
 import { sha256 } from 'multiformats/hashes/sha2';
 import * as Block from 'multiformats/block';
 import { CID } from "multiformats";
-//import { createHelia } from "helia";
-//import { FsBlockstore }  from "blockstore-fs"
+import { createHelia } from "helia";
+import { FsBlockstore }  from "blockstore-fs"
 
-import * as url  from "node:url"
+import { RekognitionClient, DetectLabelsCommand, DetectModerationLabelsCommand, DetectModerationLabelsCommandOutput } from '@aws-sdk/client-rekognition';
+
+import { green } from "@sb-labs/web3-data/functions/ConsoleColors.js";
+
+let accessKeyId = 'AKIATXUVDQ6VLC4KD67N';
+let secretAccessKey = '';
+
+try{
+    secretAccessKey = (fs.readFileSync("../../secret/.aws-rekognition")).toString()
+  }catch{
+    secretAccessKey = (fs.readFileSync("/home/stephensb/sb-labs/secret/.aws-rekognition")).toString()
+}
+
+
+const rekognition = new RekognitionClient({
+    region: 'us-east-1',
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  });
 
 const __dirname = new URL('.', import.meta.url).pathname;
 
-//let blockstore = new FsBlockstore("./tags/helia")
+let blockstore = new FsBlockstore("./tags/helia")
 
-//let helia = await createHelia({blockstore});
+let helia = await createHelia({blockstore});
 
 let engine : Web3Engine;
 
@@ -44,13 +64,14 @@ let mnemonic : string;
 
 let account: string;
 
-const network: string = "Sepolia"
+const network: string = "Ganache"
 
 try{
   mnemonic = (fs.readFileSync("../secret/.secret-mn-ganache")).toString()
 }catch{
   mnemonic = (fs.readFileSync("../../secret/.secret-mn-ganache")).toString()
 }
+
 
 let prvdrs = {} as Providers;
 
@@ -118,7 +139,8 @@ app.post("/upload", upload.single('file'), async (req, res) =>{
 
     const mime = (await fileTypeFromBuffer(req.file!.buffer))?.mime
     console.log(req.file)
-    if(req.file == undefined || mime !== "image/png"){
+    console.log(mime)
+    if(req.file == undefined || (mime !== "image/png" && mime !== "audio/mpeg")){
         console.log("invalid format")
         res.send("Invalid format")
         return
@@ -129,6 +151,26 @@ app.post("/upload", upload.single('file'), async (req, res) =>{
         console.log(tagjson)
         const tagreq = await engine.sendTransaction(network, {from: account}, "Tags", "TagsRequested", [tagjson.address, tagjson.tag], true)
         console.log(tagreq)
+        // TODO add aws rekognition
+
+        if(mime === "image/png"){
+            const command = new DetectModerationLabelsCommand({
+                Image: {
+                  Bytes: req.file.buffer,
+                },
+                MinConfidence: 50, // Minimum confidence threshold
+              });
+    
+            const rek: DetectModerationLabelsCommandOutput = await rekognition.send(command)
+    
+            if(rek.ModerationLabels!.length > 0){
+                res.send("Abusive content detected")
+            }
+            console.log(green(),"No abusive content detected")
+        }
+
+        
+
         // test content vs file
         const file = new Uint8Array(req.file?.buffer as Buffer)
         //console.log("File", file)
@@ -140,7 +182,6 @@ app.post("/upload", upload.single('file'), async (req, res) =>{
             return;
         }
         
-
         // get tags contract value
         let balance = await engine.web3Instances[network].web3.eth.getBalance(engine.defaultInstance?.contracts["Tags"].options.address)
 
@@ -166,11 +207,11 @@ app.post("/upload", upload.single('file'), async (req, res) =>{
         console.log(tag)
 
         // Add block to blockstore
-        //await helia.blockstore.put(block.cid, block.bytes)
+        await helia.blockstore.put(block.cid, block.bytes)
 
-        //await helia.pins.add(block.cid)
+        await helia.pins.add(block.cid)
 
-        fs.writeFileSync(`./tags/${block.cid.toString()}.png`, block.bytes)
+        fs.writeFileSync(`./tags/${block.cid.toString()}${mime === "image/png" ? ".png" : ".mp3"}`, block.bytes)
         
     }catch(e){
         console.log(e)
@@ -183,7 +224,7 @@ app.get("/tags/:tag", async (req, res) =>{
 
     const tag = req.params.tag
 
-    console.log(console.log(req.params))
+    console.log(req.params)
 
     const t = await engine.sendTransaction(network, {from: account}, "Tags", "TagsMap", [tag], true)
 
@@ -191,8 +232,23 @@ app.get("/tags/:tag", async (req, res) =>{
         res.send("Tag doesn't exist")
         return;
     }
+    
+    const file =  await helia.blockstore.get(CID.parse(t.transaction.content))
 
-    res.sendFile(`./tags/${t.transaction.content}.png`, { root: __dirname });
+    console.log("tag: ", file.buffer)
+
+    const mime = (await fileTypeFromBuffer(new Uint8Array(file.buffer)))?.mime
+
+    console.log("mime: ", mime)
+
+    if(mime === "image/png"){
+        res.sendFile(`./tags/${t.transaction.content}.png`, { root: __dirname });
+    }
+    else{
+        res.sendFile(`./tags/${t.transaction.content}.mp3`, { root: __dirname });
+    }
+
+    
 
     //res.send(t.transaction)
 })

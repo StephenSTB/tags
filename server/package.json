@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-rekognition": "^3.731.1",
     "@sb-labs/contract-factory-v2": "file:../../contract-factory-v2/sb-labs-contract-factory-v2-1.0.0.tgz",
     "@sb-labs/web3-data": "file:../../web3-data/sb-labs-web3-data-1.0.0.tgz",
     "@sb-labs/web3-engine": "file:../../web3-engine/sb-labs-web3-engine-1.0.0.tgz",
