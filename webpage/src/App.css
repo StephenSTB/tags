@@ -12,7 +12,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  cursor: url('public/ethereum_black.png'), auto;
+  cursor: url('ethereum_black.png'), auto;
 }
 #particles{
   z-index: -1;

@@ -117,7 +117,7 @@ export const Display = (props: DisplayProps) => {
                 state == "Connect" && <>
                     <h3>Connect Wallet</h3>
                     <p>Connect your wallet to the Tags Network</p>
-                    <Input size="small" placeholder="Password" inputType="password" onChange={changePassword} onKeyDown={keyPassword}/>
+                    <Input size="small" placeholder="Password" inputType="password" onChange={changePassword} onKeyDown={keyPassword} />
                     <div id="display-buttons">
                         <Button size="small" id="display-import-button" text="Import" onClick={() => props.setComp("Import")}/>
                         <Button size="small" id="display-connect-button" text="Connect Wallet" onClick={connectWallet}/>
@@ -128,7 +128,7 @@ export const Display = (props: DisplayProps) => {
             }
             {state == "Account" && 
                 <>
-                    <Account engine={engine} network={network} mobile={props.mobile} setEngineProps={props.setEngineProps}/>
+                    <Account engine={engine} network={network} mobile={props.mobile} setEngineProps={props.setEngineProps} setState={setState}/>
                 </>
             }
         </div>

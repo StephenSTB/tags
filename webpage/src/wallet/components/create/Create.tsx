@@ -6,8 +6,9 @@ import "./Create.css"
 import * as CryptoJS from 'crypto-js'
 
 interface CreateProps{
-    mobile: boolean
-    setComp: any
+    mobile: boolean;
+    setComp: any;
+    setEngineProps: any;
 }
 
 export const Create = (props: CreateProps) => {
@@ -47,6 +48,7 @@ export const Create = (props: CreateProps) => {
         let encryptedUser = CryptoJS.AES.encrypt(mnemonic, password).toString();
         let hmac = CryptoJS.HmacSHA256(encryptedUser, CryptoJS.SHA256(password)).toString();
         localStorage.setItem('tags-wallet', JSON.stringify({encryptedUser, hmac}))
+        props.setEngineProps(undefined, "")
         props.setComp("Display")
     }
 

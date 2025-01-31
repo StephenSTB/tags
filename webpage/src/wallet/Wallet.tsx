@@ -6,6 +6,8 @@ import "./Wallet.css"
 import { Display } from "./components/display/Display"
 import { Import } from "./components/import/Import"
 import { Tag } from "./components/tag/Tag"
+import { Name } from "./components/name/Name"
+import { Message } from "./components/message/Message"
 
 interface WalletProps{
     network: string,
@@ -14,6 +16,8 @@ interface WalletProps{
 }
 
 export const Wallet = (props: WalletProps) =>{ 
+
+    const host = true ? "http://localhost:3001" : "http://15.223.186.84:3001"
 
     const [mobile, setMobile] = useState<boolean>(false)
     const [state, setState] = useState<string>("Create")
@@ -39,7 +43,7 @@ export const Wallet = (props: WalletProps) =>{
         setState(comp)
     }
 
-    const setEngineProps = (engine: Web3Engine, network: string) =>{
+    const setEngineProps = (engine: Web3Engine | undefined, network: string) =>{
         setEngine(engine)
         setNetwork(network);
     }
@@ -49,11 +53,13 @@ export const Wallet = (props: WalletProps) =>{
             <div id="wallet">
                 <Topbar engine={engine} setComp={setComp}/>
                 {state == "Create" &&
-                    <Create mobile={mobile} setComp={setComp}/>
+                    <Create mobile={mobile} setComp={setComp} setEngineProps={setEngineProps}/>
                 }
                 {state == "Display" &&  <Display mobile={mobile} engine={engine} network={network} setComp={setComp} setEngineProps={setEngineProps}/>}
-                {state == "Import" &&  <Import mobile={mobile} setComp={setComp} />}
-                {state == "Tag" &&  <Tag mobile={mobile} engine={engine as any} network={network} setComp={setComp} />}
+                {state == "Import" &&  <Import mobile={mobile} setComp={setComp} setEngineProps={setEngineProps}/>}
+                {state == "Tag" &&  <Tag mobile={mobile} engine={engine as any} network={network} setComp={setComp} host={host} />}
+                {state == "Name" &&  <Name engine={engine as any} network={network} setComp={setComp} host={host}/>}
+                {state == "Message" &&  <Message engine={engine as any} network={network} setComp={setComp} host={host}/>}
             </div>
         </>
     )

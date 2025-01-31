@@ -7,10 +7,12 @@ import { useState } from "react"
 import * as CryptoJS from 'crypto-js'
 
 import "./Import.css"
+import PromptSync from "prompt-sync"
 
 interface ImportProps{
-    mobile: boolean,
-    setComp: any
+    mobile: boolean;
+    setComp: any;
+    setEngineProps: any;
 }
 
 export const Import = (props: ImportProps) =>{
@@ -64,6 +66,7 @@ export const Import = (props: ImportProps) =>{
         let encryptedUser = CryptoJS.AES.encrypt(mnemonic, password).toString();
         let hmac = CryptoJS.HmacSHA256(encryptedUser, CryptoJS.SHA256(password)).toString();
         localStorage.setItem('tags-wallet', JSON.stringify({encryptedUser, hmac}))
+        props.setEngineProps(undefined, "")
         props.setComp("Display")
     }
     
@@ -80,7 +83,9 @@ export const Import = (props: ImportProps) =>{
                         <Button size="small" id="import-back-button" text="Back" onClick={() => props.setComp("Display")}/>
                         <Button size="small" id="import-import-button" text="Import" onClick={importWallet}/>
                     </div>
-                    
+                    <h3>Create Wallet</h3>
+                    <p>Create a new wallet for the Tags Network</p>
+                    <Button size="small" id="import-create-button" onClick={() =>props.setComp("Create")} text="Create"/>
                 </div>
             </>)
 }

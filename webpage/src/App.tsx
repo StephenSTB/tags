@@ -2,16 +2,33 @@ import { useState } from 'react'
 import { Wallet } from "./wallet/Wallet"
 import { Web3Engine } from '@sb-labs/web3-engine'
 
-import {useCallback} from "react";
+import {useCallback, useEffect} from "react";
 import Particles from "react-particles";
 import { type Engine } from "@tsparticles/engine";
 import { loadFull } from "tsparticles";
+
+import { createHelia } from "helia";
+import { MemoryBlockstore } from "blockstore-core";
 
 import './App.css';
 
 function App() {
   const [network, setNetwork] = useState<string>()
   const [engine, setEngine] = useState<Web3Engine>()
+
+  useEffect( () =>{
+    const startHelia = async () => {
+      const helia = await createHelia({blockstore: new MemoryBlockstore()});
+      console.log(helia.libp2p.peerId.toString())
+      setInterval(async () => {
+        const connections = await helia.libp2p.getConnections()
+        //console.log(connections.length)
+      }, 10000);
+    }
+    //startHelia()
+    
+  }, [])
+
 
   const setEngineProps = (network: string, engine: Web3Engine) =>{
     setNetwork(network)

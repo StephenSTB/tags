@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tags": "ts-node --esm tags.ts"
+    "tags": "ts-node --esm tags.ts",
+    "name": "ts-node --esm name.ts", 
+    "messages": "ts-node --esm messages.ts"
   },
   "keywords": [],
   "author": "",

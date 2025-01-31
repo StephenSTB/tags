@@ -36,9 +36,25 @@
 
 /*network*/
 
-#display-network{
+#display-network, #display-back{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+#network-dropdown:hover, option:hover{
+    cursor: url("ethereum_black.png"), auto;
+}
+
+
+#display-back-button{
+    background: none;
+    border: none;
+    color: var(--purple);
+    font-size: large;
+}
+
+#display-copy:hover, #display-back-button:hover, #account-send-button:hover{
+    cursor: url("ethereum_black.png"), auto;
 }

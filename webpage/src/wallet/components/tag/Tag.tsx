@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 import { Web3Engine } from "@sb-labs/web3-engine";
 import { Input, Button, Divider, Icon } from "@sb-labs/basic-components/dist";
-
+import { fileToUint8Array } from "../helper/Helper";
 import * as Block from 'multiformats/block';
 import * as raw from "multiformats/codecs/raw"
 import { sha256 } from 'multiformats/hashes/sha2';
 import axios from "axios" 
 
-import { user } from "@sb-labs/images/"
-import { toBN } from "web3-utils";
+import { search, user } from "@sb-labs/images/"
 
 import "./Tag.css";
 
 interface TagProps{
-    engine: Web3Engine,
-    network: string
-    mobile: boolean,
-    setComp: any
+    engine: Web3Engine;
+    network: string;
+    mobile: boolean;
+    setComp: any;
+    host: string;
 }
 
 export const Tag = (props: TagProps) => {
@@ -24,7 +24,7 @@ export const Tag = (props: TagProps) => {
     const engine = props.engine;
     const network = props.network;
 
-    const host = true ? "http://localhost:3001" : "http://15.223.186.84:3001"
+    const host = props.host;
 
     const [tag, setTag] = useState<string>("")
     const [iconImport, setIconImport] = useState<any>(user)
@@ -86,20 +86,6 @@ export const Tag = (props: TagProps) => {
         }
         setError("")
         setTag(e.target.value)
-    }
-
-    function fileToUint8Array(file: File): Promise<Uint8Array> {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
-            resolve(uint8Array);
-          };
-          reader.onerror = () => {
-            reject(reader.error);
-          };
-          reader.readAsArrayBuffer(file);
-        });
     }
 
     const changeContent= async (e: any) =>{
@@ -236,7 +222,7 @@ export const Tag = (props: TagProps) => {
             <br/>
             <Divider/>
             <h3>Search For Tag</h3>
-            <Input size="small" placeholder="tag..." onChange={searchTag}/>
+            <Input size="small" placeholder="tag..." onChange={searchTag} button={true} icon={search}/>
             <br />
 
             {/*{searchType == "image" && <div> <img src={"https://ipfs.io/ipfs/" + searchCid} id="tag-image"/></div>}*/}

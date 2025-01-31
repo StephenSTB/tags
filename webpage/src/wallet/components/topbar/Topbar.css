@@ -28,3 +28,7 @@
     outline: none;
     box-shadow: none;
 }
+
+#topbar-name-button:hover, #topbar-message-button:hover, #topbar-tag-button:hover, #topbar-wallet-button:hover{
+    cursor: url("ethereum_black.png"), auto;
+}

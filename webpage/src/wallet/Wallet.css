@@ -19,7 +19,7 @@
 @media screen and (max-width: 900px) 
 {
 	#wallet{
-        height: 800px;
-        width: 350px;
+        height: 100vh;
+        width: 100vw;
     }
 }

@@ -10,6 +10,7 @@ interface AccountProps{
     network: string;
     setEngineProps: any;
     mobile: boolean;
+    setState: any;
 }
 
 export const Account = (props: AccountProps) =>{
@@ -119,6 +120,14 @@ export const Account = (props: AccountProps) =>{
             return;
         }
 
+        console.log(sentEther, ether, sendEtherGas)
+
+        if(Number(ether) < (Number(sentEther) + Number(sendEtherGas))){
+            setSendError("Not enough ether to cover gas.")
+            setEtherTransacting(false)
+            return;
+        }
+
         console.log(account, toAddress, sentEther)
         const eth = engine?.web3Instances[network].web3.utils.toWei(sentEther, "ether")
         await engine?.sendTransaction(network as string, {from: account, to:toAddress, value: eth})
@@ -175,7 +184,13 @@ export const Account = (props: AccountProps) =>{
             <div id="display-network">
                 <h3>Network</h3>
                 {network}
-                <Dropdown options={options} size="medium" theme="light" onChange={networkChange}></Dropdown>
+                <Dropdown id="network-dropdown" options={options} size="medium" theme="light" onChange={networkChange}></Dropdown>
+            </div>
+            <br />
+            <Divider />
+            <br/>
+            <div id="display-back">
+                <Button size="medium" id="display-back-button" text="Back" onClick={() => props.setState("Connect")}/>
             </div>
         </div>
     </>)

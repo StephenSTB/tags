@@ -21,7 +21,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-rekognition": "^3.731.1",
+    "@aws-sdk/client-rekognition": "^3.734.0",
+    "@aws-sdk/node-http-handler": "^3.374.0",
     "@sb-labs/contract-factory-v2": "file:../../contract-factory-v2/sb-labs-contract-factory-v2-1.0.0.tgz",
     "@sb-labs/web3-data": "file:../../web3-data/sb-labs-web3-data-1.0.0.tgz",
     "@sb-labs/web3-engine": "file:../../web3-engine/sb-labs-web3-engine-1.0.0.tgz",
@@ -36,12 +37,17 @@
     "multer": "^1.4.5-lts.1",
     "multiformats": "^13.3.1",
     "node-packer": "^0.1.7",
+    "peer-id": "^0.16.0",
     "pkg": "^5.8.0",
     "ts-node": "^10.9.2"
   },
   "type": "module",
   "devDependencies": {
+    "@eslint/js": "^9.19.0",
     "@types/express": "^4.17.11",
-    "@types/mime-types": "^2.1.4"
+    "@types/mime-types": "^2.1.4",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
+    "typescript-eslint": "^8.21.0"
   }
 }
